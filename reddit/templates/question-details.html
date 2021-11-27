@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section class="page-wrapper">
+        <div class="container">
+            {% if question %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="post post-single">
+                            <h2 class="post-title">{{question.question|title}}</h2>
+                            <div class="post-meta">
+                                <ul>
+                                    <li>
+                                        <i class="ion-calendar"></i> {{question.added_date}}
+                                    </li>
+                                    {% if question.user %}
+                                        <li>
+                                            <i class="ion-android-people"></i> {{question.user}}
+                                        </li>
+                                    {% endif %}
+                                    <li>
+                                        <a href="{% url 'categoryQuestion' category_id=question.category.id %}"><i class="ion-pricetags"></i> {{question.category.title|title}}</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="post-thumb">
+                                <img class="img-responsive" src="images/blog/blog-post-1.jpg" alt="">
+                            </div>
+                            
+                            <div class="post-comments">
+                                {% if messages %}
+                                <ul class="messages">
+                                    {% for message in messages %}
+                                    <li {% if message.tags %} class="text-{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                                {% if answers %}
+                                    {% for answerdict in answers %}
+                                        <ul class="media-list comments-list m-bot-50 clearlist">
+                                            <!-- Comment Item start-->
+                                            <li class="media">
+                                                <a class="pull-left" href="javascript:void(0)">
+                                                    <img class="media-object comment-avatar" src="{{answerdict.user_profile.profile_picture.url}}" alt="" width="50" height="50">
+                                                </a>
+                                                <div class="media-body">
+                                                    <div class="comment-info">
+                                                        <h4 class="comment-author">
+                                                            <a href="javascript:void(0)">{{answerdict.answer.user.first_name}} {{answerdict.answer.user.last_name}}</a>
+                                                        </h4>
+                                                        <time>{{answerdict.added_date}}</time>
+                                                    </div>
+                                                    <p>
+                                                        {{answerdict.answer}}
+                                                    </p>
+                                                    
+                                                    <div class="col-md-12">
+                                                        {% if answerdict.comments %}
+                                                            {% for comment in answerdict.comments %}
+                                                                <div class="row">
+                                                                    <div class="col-md-4">{{comment.user.first_name|title}} {{comment.user.last_name|title}}
+                                                                        <small>{{comment.added_date}}</small>
+                                                                    </div>
+                                                                    <div class="col-md-6">{{comment.comments}}</div>
+                                                                    {% if comment.image %}
+                                                                        <div class="col-md-2"><a target="_blank" href="{{comment.image.url}}"><img width=50 src="{{comment.image.url}}"></a></div>
+                                                                    {% endif %}
+                                                                </div>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                            
+                                                    </div>
+                                                    
+                                                    
+                                                    {% if request.user.is_authenticated %}
+                                                        <form action="{% url 'SaveComment' %}" method="POST" enctype='multipart/form-data'>
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="answer_id" value="{{answerdict.answer.id}}">
+                                                            <input type="hidden" name="question_id" value="{{question.id}}">
+                                                            <input type="text" class="form-control" name="comment" placeholder="Comment on Answer...">
+                                                            <input type="file" class="form-control" name="image" multiple>
+                                                            <input type="submit" name="answer-{{answerdict.answer.id}}">
+                                                        </form>
+                                                    {% endif %}
+                                                </div>
+                                            </li>
+                                            <!-- End Comment Item -->
+                                        </ul>
+                                    {% endfor %}
+                                {% else %}
+                                <h6>No answers</h6>
+                                {% endif %}
+                            </div>
+                            {% if request.user.is_authenticated %}
+                                <div class="post-comments-form">
+                                    <h3 class="post-sub-heading">Leave You Comments</h3>
+                                    <form method="post" action="#" id="form" role="form">
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <!-- Name -->
+                                                <input type="text" name="name" id="name" class=" form-control" placeholder="Name *" maxlength="100" required="">
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <!-- Email -->
+                                                <input type="email" name="email" id="email" class=" form-control" placeholder="Email *" maxlength="100" required="">
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <!-- Website -->
+                                                <input type="text" name="website" id="website" class=" form-control" placeholder="Website" maxlength="100">
+                                            </div>
+                                            <!-- Comment -->
+                                            <div class="form-group col-md-12">
+                                                <textarea name="text" id="text" class=" form-control" rows="6" placeholder="Comment" maxlength="400"></textarea>
+                                            </div>
+                                            <!-- Send Button -->
+                                            <div class="form-group col-md-12">
+                                                <button type="submit" class="btn btn-main ">
+                                                    Send comment
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <h6>Log in to add an answer</h6>
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <h6>Data not found</h6>
+            {% endif %}
+                
+        </div>
+    </section>
+{% endblock %}

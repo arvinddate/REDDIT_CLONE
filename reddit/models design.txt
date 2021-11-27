@@ -1,0 +1,23 @@
+1)category
+2)Question
+3)comments
+4)voting
+
+template HTML pages
+1. Home page
+   banner
+   recent 5 que list 
+   nevigation have category
+2. Que list for category
+   que list
+
+3. Que View 
+   que as tittle
+   lists of answers
+   comments on the answer
+4. Login 
+5. Registration
+6. About Us page
+7. Profile page
+8. contact us
+  
