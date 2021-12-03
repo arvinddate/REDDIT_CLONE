@@ -13,7 +13,7 @@
 
     <meta name="author" content="Themefisher.com">
 
-    <title>Reddit | Creative Agency Bootstrap template</title>
+    <title>Reddit</title>
 
     <!-- Mobile Specific Meta-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -66,10 +66,15 @@
                                     {% for category in navigation_categories%}
                                          <li><a href="{% url 'categoryQuestion' category_id=category.id %}">{{category.title}}</a></li>
                                     {% endfor %}
+                                    {% if request.user.is_authenticated %}
+                                    <li><a href="{% url 'userProfile' %}">Profile</a></li>
+                                    <li><a href="{% url 'user-logout' %}">LogOut</a></li>
+                                    {% else %}
+                                    <li><a href="{% url 'UserLogin' %}">Login</a></li>
+                                    <li><a href="{% url 'UserRegistration' %}">Registration</a></li>
+
+                                    {% endif %}
                                     
-                                    <li><a href="index.html">Profile</a></li>
-                                    <li><a href="index.html">Login</a></li>
-                                    <li><a href="index.html">LogOut</a></li>
                                 </ul>
                             </div><!-- /.navbar-collapse -->
                         </div><!-- /.container-fluid -->

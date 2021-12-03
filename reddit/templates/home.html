@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
+{% if messages %}
+<ul class="messages">
+	{% for message in messages %}
+	<li {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>{{ message }}</li>
+	{% endfor %}
+</ul>
+{% endif %}
 <section class="slider">
 	<div class="container">
 		<div class="row">
