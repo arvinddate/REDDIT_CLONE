@@ -1,0 +1,29 @@
+{% extends 'base.html'%}
+{% block content%}
+
+{% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <li {% if message.tags %} class="text-{{message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor%}
+        </ul>
+    {% endif %}
+<form id="contact-form" action="{% url 'postQuestion' %}" method="POST">
+    {% csrf_token %}
+    <div class="col-md-6 col-sm-12">
+        <div class="block">
+            <select name="category" >
+                {%for category in categories %}
+                <option value="{{category}}">{{category}}</option>
+                {% endfor %}
+            </select>
+            <div class="form-group">
+                <textarea name="question" type="text" class="form-control" style="height: 200px;" placeholder="question"></textarea>
+            </div>
+            <button class="btn btn-default" type="submit">submit</button>
+        </div>
+    </div>
+    <div class="error" id="error">Sorry Msg dose not sent</div>
+    <div class="success" id="success">Message Sent</div>
+</form>
+{% endblock %}

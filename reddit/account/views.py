@@ -174,3 +174,40 @@ def logout_view(request):
     logout(request)
     messages.success(request,'User LOgged Out Successfully')
     return redirect('homePage')
+def postQuestion(request):
+    categories = Category.objects.filter(status=True)
+    if request.method == 'POST':
+        print(request.POST.get('category'))
+        question=request.POST.get('question')
+        category=request.POST.get('category')
+        category_id=Category.objects.get(title=category)
+        user=request.user.username
+        users=User.objects.get(username=user)
+        if question != ' ':
+            if len(question)<20:
+                messages.error(request,'question too short')
+                return redirect('postQuestion')
+            elif len(question)>400:
+                messages.error(request,'question too long')
+                return redirect('postQuestion')
+            
+            else:
+                Question.objects.create(
+                    category=category_id,
+                    user=users,
+                    question=question,
+                    added_date=datetime.now()
+                )
+                messages.error(request,'question has been posted')
+                return redirect('homePage')
+
+    navigation_categories = Category.objects.filter(status=True).order_by('-id')[:5]
+    return render(request,'post-questions.html',{'navigation_categories': navigation_categories,'categories':categories})
+
+def myQuestions(request):
+    user=request.user.username
+    users=User.objects.get(username=user)
+    questions=Question.objects.filter(user=users)
+    print(questions)
+    navigation_categories = Category.objects.filter(status=True).order_by('-id')[:5]
+    return render(request,'my-questions.html',{'navigation_categories':navigation_categories,'questions':questions,'users':users.username})
